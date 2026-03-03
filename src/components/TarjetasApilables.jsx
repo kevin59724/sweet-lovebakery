@@ -128,19 +128,14 @@ export default function TarjetasApilables() {
                     <div
                         key={i}
                         ref={el => cardsRef.current[i] = el}
+                        className="product-card"
                         style={{
                             background: c.bg,
-                            borderRadius: 'var(--radius-lg)',
-                            overflow: 'hidden',
-                            boxShadow: '0 8px 40px rgba(119,98,101,0.12)',
-                            display: 'grid',
                             gridTemplateColumns: i % 2 === 0 ? '1fr 1.2fr' : '1.2fr 1fr',
-                            minHeight: '320px',
-                            border: '1px solid rgba(249,186,194,0.35)',
                         }}
                     >
                         {/* Image */}
-                        <div style={{ order: i % 2 === 0 ? 2 : 1, position: 'relative', overflow: 'hidden' }}>
+                        <div className="product-card-img" style={{ order: i % 2 === 0 ? 2 : 1, position: 'relative', overflow: 'hidden' }}>
                             <img src={c.img} alt={c.title}
                                 style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
                             <div style={{
@@ -153,7 +148,7 @@ export default function TarjetasApilables() {
                         </div>
 
                         {/* Content */}
-                        <div style={{
+                        <div className="product-card-content" style={{
                             order: i % 2 === 0 ? 1 : 2,
                             padding: '2.5rem',
                             display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '0.8rem',

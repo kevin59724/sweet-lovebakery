@@ -53,10 +53,7 @@ export default function PedidoCTA() {
                 filter: 'blur(70px)', pointerEvents: 'none',
             }} />
 
-            <div className="section-container" style={{
-                display: 'grid', gridTemplateColumns: '1fr 1.1fr',
-                gap: '5rem', alignItems: 'center',
-            }}>
+            <div className="section-container grid-cta">
                 {/* Info side */}
                 <div ref={infoRef} style={{ display: 'flex', flexDirection: 'column', gap: '1.8rem' }}>
                     <div>
@@ -153,7 +150,7 @@ export default function PedidoCTA() {
 
                 {/* Form */}
                 <div ref={formRef}>
-                    <div style={{
+                    <div className="form-card" style={{
                         background: 'var(--white)', borderRadius: 'var(--radius-lg)',
                         padding: '2.8rem', boxShadow: '0 20px 60px rgba(119,98,101,0.12)',
                         border: '1px solid rgba(249,186,194,0.35)',
@@ -184,7 +181,7 @@ export default function PedidoCTA() {
                                         style={{ display: 'inline', marginLeft: '0.5rem' }} />
                                 </h3>
 
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                <div className="grid-form-row">
                                     <div>
                                         <label style={{
                                             fontFamily: 'Open Sans', fontSize: '0.72rem',

@@ -125,11 +125,7 @@ export default function Hero() {
                 position: 'absolute', inset: 0, pointerEvents: 'none',
             }} />
 
-            <div className="section-container" style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '4rem', alignItems: 'center', width: '100%',
-            }}>
+            <div className="section-container grid-hero">
                 {/* Text side */}
                 <div style={{ position: 'relative', zIndex: 1 }}>
                     <div style={{
@@ -194,7 +190,7 @@ export default function Hero() {
                     </div>
 
                     {/* Social proof */}
-                    <div style={{
+                    <div className="hero-stats" style={{
                         marginTop: '3rem', display: 'flex', gap: '2.5rem',
                     }}>
                         {[
@@ -218,7 +214,7 @@ export default function Hero() {
                 </div>
 
                 {/* Image side */}
-                <div ref={imgRef} style={{
+                <div ref={imgRef} className="hero-img-col" style={{
                     position: 'relative', display: 'flex', justifyContent: 'center',
                 }}>
                     {/* Outer ring */}

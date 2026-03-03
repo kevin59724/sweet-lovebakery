@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
-import { Heart, ShoppingBag, Menu, X } from 'lucide-react';
+import { Heart, ShoppingBag } from 'lucide-react';
 
 export default function Navbar() {
     const navRef = useRef(null);
     const [scrolled, setScrolled] = useState(false);
     const [open, setOpen] = useState(false);
+    const [closing, setClosing] = useState(false);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
-            // Set initial state synchronously so the element never flashes visible
             gsap.set(navRef.current, { y: -80, opacity: 0 });
             gsap.to(navRef.current, {
                 y: 0, opacity: 1, duration: 0.8, ease: 'back.out(1.7)', delay: 0.4
@@ -20,6 +20,21 @@ export default function Navbar() {
         window.addEventListener('scroll', onScroll);
         return () => { ctx.revert(); window.removeEventListener('scroll', onScroll); };
     }, []);
+
+    const handleToggle = () => {
+        if (open) {
+            // Trigger close animation, then unmount
+            setClosing(true);
+            setTimeout(() => { setOpen(false); setClosing(false); }, 220);
+        } else {
+            setOpen(true);
+        }
+    };
+
+    const handleLinkClick = () => {
+        setClosing(true);
+        setTimeout(() => { setOpen(false); setClosing(false); }, 220);
+    };
 
     const links = ['Menú', 'Pedidos', 'Nosotras', 'Contacto'];
 
@@ -38,7 +53,7 @@ export default function Navbar() {
                 boxShadow: scrolled ? '0 8px 40px rgba(221,67,95,0.15)' : '0 4px 20px rgba(119,98,101,0.08)',
                 transition: 'background 0.4s ease, box-shadow 0.4s ease, backdrop-filter 0.4s ease',
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                opacity: 0,  /* GSAP will take over immediately on mount */
+                opacity: 0,
             }}
         >
             {/* Logo */}
@@ -51,14 +66,13 @@ export default function Navbar() {
             </a>
 
             {/* Desktop links */}
-            <nav style={{ display: 'flex', gap: '2rem', listStyle: 'none' }} className="hidden md:flex">
+            <nav style={{ gap: '2rem', listStyle: 'none' }} className="hidden md:flex items-center">
                 {links.map(l => (
                     <a key={l} href={`#${l.toLowerCase()}`} style={{
                         fontFamily: 'Montserrat, sans-serif', fontWeight: 600,
                         fontSize: '0.82rem', letterSpacing: '0.06em',
                         color: 'var(--text)', textDecoration: 'none',
-                        textTransform: 'uppercase',
-                        transition: 'color 0.2s',
+                        textTransform: 'uppercase', transition: 'color 0.2s',
                     }}
                         onMouseEnter={e => e.target.style.color = 'var(--primary)'}
                         onMouseLeave={e => e.target.style.color = 'var(--text)'}
@@ -66,44 +80,62 @@ export default function Navbar() {
                 ))}
             </nav>
 
-            {/* CTA */}
+            {/* Desktop CTA */}
             <a href="#pedidos" className="hidden md:flex" style={{ textDecoration: 'none' }}>
                 <button className="btn-primary" style={{ padding: '0.65rem 1.5rem', fontSize: '0.78rem' }}>
                     <ShoppingBag size={15} /> Reservar
                 </button>
             </a>
 
-            {/* Mobile burger */}
+            {/* ── Mobile hamburger button ── */}
             <button
-                onClick={() => setOpen(!open)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)' }}
+                onClick={handleToggle}
+                aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}
                 className="flex md:hidden"
             >
-                {open ? <X size={24} /> : <Menu size={24} />}
+                <div className={`hamburger${open ? ' is-open' : ''}`}>
+                    <span />
+                    <span />
+                    <span />
+                </div>
             </button>
 
-            {/* Mobile menu */}
-            {open && (
-                <div style={{
-                    position: 'absolute', top: 'calc(100% + 1rem)', left: 0, right: 0,
-                    background: 'rgba(255,231,234,0.96)', backdropFilter: 'blur(20px)',
-                    borderRadius: '2rem', border: '1.5px solid rgba(249,186,194,0.6)',
-                    padding: '1.5rem 2rem', display: 'flex', flexDirection: 'column', gap: '1rem',
-                }}>
+            {/* ── Mobile menu ── */}
+            {(open || closing) && (
+                <div
+                    className={closing ? 'mobile-menu-exit' : 'mobile-menu-enter'}
+                    style={{
+                        position: 'absolute', top: 'calc(100% + 0.8rem)', left: 0, right: 0,
+                        background: 'rgba(255,231,234,0.97)', backdropFilter: 'blur(24px)',
+                        borderRadius: '2rem', border: '1.5px solid rgba(249,186,194,0.6)',
+                        padding: '1.5rem 2rem',
+                        display: 'flex', flexDirection: 'column', gap: '1rem',
+                        boxShadow: '0 12px 40px rgba(221,67,95,0.14)',
+                    }}
+                >
                     {links.map(l => (
                         <a key={l} href={`#${l.toLowerCase()}`}
-                            onClick={() => setOpen(false)}
+                            onClick={handleLinkClick}
                             style={{
                                 fontFamily: 'Montserrat, sans-serif', fontWeight: 600,
-                                fontSize: '0.9rem', color: 'var(--text)', textDecoration: 'none',
+                                fontSize: '0.95rem', color: 'var(--text)', textDecoration: 'none',
                                 textTransform: 'uppercase', letterSpacing: '0.06em',
-                            }}>
+                                padding: '0.3rem 0',
+                                borderBottom: '1px solid rgba(249,186,194,0.3)',
+                                transition: 'color 0.2s',
+                            }}
+                            onMouseEnter={e => e.target.style.color = 'var(--primary)'}
+                            onMouseLeave={e => e.target.style.color = 'var(--text)'}
+                        >
                             {l}
                         </a>
                     ))}
-                    <button className="btn-primary" style={{ width: 'fit-content' }}>
-                        <Heart size={14} /> Reservar pedido
-                    </button>
+                    <a href="#pedidos" onClick={handleLinkClick} style={{ textDecoration: 'none', marginTop: '0.4rem' }}>
+                        <button className="btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
+                            <Heart size={14} /> Reservar pedido
+                        </button>
+                    </a>
                 </div>
             )}
         </header>

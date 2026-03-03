@@ -28,10 +28,7 @@ export default function Footer() {
             }} />
 
             <div className="section-container" style={{ position: 'relative', zIndex: 1 }}>
-                <div style={{
-                    display: 'grid', gridTemplateColumns: '1.6fr 1fr 1fr 1fr',
-                    gap: '3rem', marginBottom: '4rem',
-                }}>
+                <div className="grid-footer">
                     {/* Brand */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center' }}>

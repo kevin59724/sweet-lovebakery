@@ -111,11 +111,7 @@ export default function BarajaDiagnostica() {
                 </div>
 
                 {/* Baraja layout */}
-                <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr',
-                    gap: '2rem', alignItems: 'start',
-                }}>
+                <div className="grid-baraja">
                     {/* Tab selectors */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                         {CARDS.map((c, i) => (

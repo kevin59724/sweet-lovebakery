@@ -87,6 +87,7 @@ export default function ManifiestoParallax() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '3.5rem' }}>
                     {PHRASES.map((p, i) => (
                         <div key={i} ref={el => linesRef.current[i] = el}
+                            className="manifesto-line"
                             style={{
                                 display: 'flex', flexDirection: 'column', gap: '0.2rem',
                                 alignItems: i % 2 === 0 ? 'flex-start' : 'flex-end',
