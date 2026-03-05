@@ -14,7 +14,6 @@ const CARDS = [
         body: 'Diseñamos cada pastel desde cero, adaptando temáticas, sabores y tamaños a tu visión. Desde naked cakes florales hasta estructuras de múltiples pisos.',
         img: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&q=80&auto=format',
         badge: 'Desde un día antes',
-        accent: '#dd435f',
     },
     {
         icon: <Star size={28} color="var(--primary)" strokeWidth={1.8} />,
@@ -24,7 +23,6 @@ const CARDS = [
         body: 'Crumble cookies artesanales, cuchareables en tarro, pyes y más postres de autor. Ideales para regalos, eventos o simplemente darte un capricho.',
         img: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=600&q=80&auto=format',
         badge: 'Pide desde 1 unidad',
-        accent: '#c73a55',
     },
     {
         icon: <Truck size={28} color="var(--primary)" strokeWidth={1.8} />,
@@ -34,7 +32,6 @@ const CARDS = [
         body: 'Cerramos caterings para empresas, reuniones y eventos sociales. Menú personalizable, presentación profesional y entrega garantizada.',
         img: 'https://images.unsplash.com/photo-1621303837174-89787a7d4729?w=600&q=80&auto=format',
         badge: 'Cotización sin compromiso',
-        accent: '#a83049',
     },
 ];
 
@@ -42,40 +39,32 @@ export default function BarajaDiagnostica() {
     const sectionRef = useRef(null);
     const titleRef = useRef(null);
     const [active, setActive] = useState(0);
-    const cardRefs = useRef([]);
+    const [prev, setPrev] = useState(null);
 
+    /* ── Title entrance (only on title, NOT on card details) ── */
     useEffect(() => {
         const ctx = gsap.context(() => {
             gsap.from(titleRef.current.children, {
                 y: 50, opacity: 0, duration: 0.8, stagger: 0.15, ease: 'power3.out',
                 scrollTrigger: { trigger: titleRef.current, start: 'top 80%' },
             });
-
-            cardRefs.current.forEach((el, i) => {
-                if (!el) return;
-                gsap.from(el, {
-                    x: i % 2 === 0 ? -60 : 60, opacity: 0, duration: 0.7,
-                    ease: 'power3.out', delay: i * 0.12,
-                    scrollTrigger: { trigger: el, start: 'top 85%' },
-                });
-            });
         }, sectionRef);
 
-        // Auto-cycle
+        /* Auto-cycle */
         const interval = setInterval(() => {
-            setActive(prev => (prev + 1) % CARDS.length);
+            setActive(a => (a + 1) % CARDS.length);
         }, 4000);
 
         return () => { ctx.revert(); clearInterval(interval); };
     }, []);
 
-    // Animate card swap
-    useEffect(() => {
-        const el = cardRefs.current[active];
-        if (el) {
-            gsap.from(el, { scale: 0.96, opacity: 0.6, duration: 0.5, ease: 'power2.out' });
-        }
-    }, [active]);
+    const handleSelect = (i) => {
+        if (i === active) return;
+        setPrev(active);
+        setActive(i);
+        /* clear prev after transition */
+        setTimeout(() => setPrev(null), 400);
+    };
 
     return (
         <section ref={sectionRef} id="menú" style={{
@@ -104,8 +93,7 @@ export default function BarajaDiagnostica() {
                     }}>
                         Lo que hacemos{' '}
                         <span className="font-drama" style={{
-                            fontStyle: 'italic', color: 'var(--primary)',
-                            fontSize: '110%',
+                            fontStyle: 'italic', color: 'var(--primary)', fontSize: '110%',
                         }}>con amor</span>
                     </h2>
                 </div>
@@ -117,7 +105,7 @@ export default function BarajaDiagnostica() {
                         {CARDS.map((c, i) => (
                             <button
                                 key={i}
-                                onClick={() => setActive(i)}
+                                onClick={() => handleSelect(i)}
                                 style={{
                                     border: 'none', cursor: 'pointer', textAlign: 'left',
                                     padding: '1.4rem 1.8rem',
@@ -157,56 +145,63 @@ export default function BarajaDiagnostica() {
                         ))}
                     </div>
 
-                    {/* Active card detail */}
-                    {CARDS.map((c, i) => (
-                        <div
-                            key={i}
-                            ref={el => cardRefs.current[i] = el}
-                            style={{
-                                display: active === i ? 'block' : 'none',
-                                borderRadius: 'var(--radius-lg)',
-                                overflow: 'hidden',
-                                boxShadow: '0 20px 60px rgba(221,67,95,0.18)',
-                            }}
-                        >
-                            <div style={{ position: 'relative', height: '240px', overflow: 'hidden' }}>
-                                <img src={c.img} alt={c.title}
-                                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-                                <div style={{
-                                    position: 'absolute', inset: 0,
-                                    background: 'linear-gradient(to bottom, transparent 50%, rgba(221,67,95,0.6) 100%)',
-                                }} />
-                                <div style={{
-                                    position: 'absolute', bottom: '1.2rem', left: '1.5rem',
-                                    background: 'rgba(255,255,255,0.92)', borderRadius: '100px',
-                                    padding: '0.35rem 1rem', backdropFilter: 'blur(10px)',
-                                }}>
-                                    <span style={{
-                                        fontFamily: 'Open Sans', fontSize: '0.72rem',
-                                        fontWeight: 600, color: 'var(--primary)'
-                                    }}>⏰ {c.badge}</span>
+                    {/* Card detail — only the active one mounts; CSS animates in */}
+                    <div style={{ position: 'relative' }}>
+                        {CARDS.map((c, i) => (
+                            <div
+                                key={i}
+                                style={{
+                                    /* Only show the active card. Pure CSS fade — no GSAP. */
+                                    display: active === i || prev === i ? 'block' : 'none',
+                                    opacity: active === i ? 1 : 0,
+                                    transition: 'opacity 0.35s ease',
+                                    borderRadius: 'var(--radius-lg)',
+                                    overflow: 'hidden',
+                                    boxShadow: '0 20px 60px rgba(221,67,95,0.18)',
+                                    /* absolute only for the fading-out previous card */
+                                    ...(prev === i ? {
+                                        position: 'absolute', top: 0, left: 0, right: 0,
+                                        pointerEvents: 'none',
+                                    } : {}),
+                                }}
+                            >
+                                <div style={{ position: 'relative', height: '240px', overflow: 'hidden' }}>
+                                    <img src={c.img} alt={c.title}
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                                    <div style={{
+                                        position: 'absolute', inset: 0,
+                                        background: 'linear-gradient(to bottom, transparent 50%, rgba(221,67,95,0.6) 100%)',
+                                    }} />
+                                    <div style={{
+                                        position: 'absolute', bottom: '1.2rem', left: '1.5rem',
+                                        background: 'rgba(255,255,255,0.92)', borderRadius: '100px',
+                                        padding: '0.35rem 1rem', backdropFilter: 'blur(10px)',
+                                    }}>
+                                        <span style={{
+                                            fontFamily: 'Open Sans', fontSize: '0.72rem',
+                                            fontWeight: 600, color: 'var(--primary)',
+                                        }}>⏰ {c.badge}</span>
+                                    </div>
+                                </div>
+                                <div style={{ background: 'var(--white)', padding: '2rem' }}>
+                                    <h3 className="font-drama" style={{
+                                        fontStyle: 'italic', fontSize: '2rem',
+                                        color: 'var(--primary)', marginBottom: '0.8rem', lineHeight: 1.2,
+                                    }}>{c.drama}</h3>
+                                    <p style={{
+                                        fontFamily: 'Open Sans', fontSize: '0.95rem',
+                                        lineHeight: 1.8, color: 'var(--text)', opacity: 0.9,
+                                        marginBottom: '1.5rem',
+                                    }}>{c.body}</p>
+                                    <a href="#pedidos" style={{ textDecoration: 'none' }}>
+                                        <button className="btn-primary" style={{ fontSize: '0.8rem', padding: '0.75rem 1.6rem' }}>
+                                            Quiero este servicio
+                                        </button>
+                                    </a>
                                 </div>
                             </div>
-                            <div style={{
-                                background: 'var(--white)', padding: '2rem',
-                            }}>
-                                <h3 className="font-drama" style={{
-                                    fontStyle: 'italic', fontSize: '2rem',
-                                    color: 'var(--primary)', marginBottom: '0.8rem', lineHeight: 1.2,
-                                }}>{c.drama}</h3>
-                                <p style={{
-                                    fontFamily: 'Open Sans', fontSize: '0.95rem',
-                                    lineHeight: 1.8, color: 'var(--text)', opacity: 0.9,
-                                    marginBottom: '1.5rem',
-                                }}>{c.body}</p>
-                                <a href="#pedidos" style={{ textDecoration: 'none' }}>
-                                    <button className="btn-primary" style={{ fontSize: '0.8rem', padding: '0.75rem 1.6rem' }}>
-                                        Quiero este servicio
-                                    </button>
-                                </a>
-                            </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
             </div>
         </section>
