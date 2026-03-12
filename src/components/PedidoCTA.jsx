@@ -31,11 +31,11 @@ export default function PedidoCTA() {
     const handleSubmit = (e) => {
         e.preventDefault();
         const mensaje =
-            `¡Hola Kari's Bakery! 🎂 Quiero hacer un pedido:\n\n` +
-            `👤 *Nombre:* ${form.nombre}\n` +
-            `📱 *Mi WhatsApp:* ${form.whatsapp}\n` +
-            `🛍️ *Producto:* ${form.producto}\n` +
-            `📝 *Detalles:* ${form.detalle}`;
+            `Hola Kari's Bakery! Quiero hacer un pedido:\n\n` +
+            `*Nombre:* ${form.nombre}\n` +
+            `*WhatsApp:* ${form.whatsapp}\n` +
+            `*Producto:* ${form.producto}\n` +
+            `*Detalles:* ${form.detalle}`;
         const url = `https://wa.me/51978919450?text=${encodeURIComponent(mensaje)}`;
         window.open(url, '_blank');
         setSent(true);
