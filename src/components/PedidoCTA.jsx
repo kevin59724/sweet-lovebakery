@@ -10,6 +10,7 @@ export default function PedidoCTA() {
     const formRef = useRef(null);
     const infoRef = useRef(null);
     const [sent, setSent] = useState(false);
+    const [form, setForm] = useState({ nombre: '', whatsapp: '', producto: '', detalle: '' });
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -25,8 +26,18 @@ export default function PedidoCTA() {
         return () => ctx.revert();
     }, []);
 
+    const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+
     const handleSubmit = (e) => {
         e.preventDefault();
+        const mensaje =
+            `¡Hola Kari's Bakery! 🎂 Quiero hacer un pedido:\n\n` +
+            `👤 *Nombre:* ${form.nombre}\n` +
+            `📱 *Mi WhatsApp:* ${form.whatsapp}\n` +
+            `🛍️ *Producto:* ${form.producto}\n` +
+            `📝 *Detalles:* ${form.detalle}`;
+        const url = `https://wa.me/51978919450?text=${encodeURIComponent(mensaje)}`;
+        window.open(url, '_blank');
         setSent(true);
     };
 
@@ -190,7 +201,8 @@ export default function PedidoCTA() {
                                         }}>
                                             Nombre
                                         </label>
-                                        <input type="text" required placeholder="Tu nombre"
+                                        <input type="text" name="nombre" required placeholder="Tu nombre"
+                                            value={form.nombre} onChange={handleChange}
                                             style={inputStyle}
                                             onFocus={e => { e.target.style.borderColor = 'var(--primary)'; e.target.style.boxShadow = '0 0 0 3px rgba(221,67,95,0.12)'; }}
                                             onBlur={e => { e.target.style.borderColor = 'rgba(249,186,194,0.6)'; e.target.style.boxShadow = 'none'; }}
@@ -204,7 +216,8 @@ export default function PedidoCTA() {
                                         }}>
                                             WhatsApp
                                         </label>
-                                        <input type="tel" required placeholder="+51 9XX XXX XXX"
+                                        <input type="tel" name="whatsapp" required placeholder="+51 9XX XXX XXX"
+                                            value={form.whatsapp} onChange={handleChange}
                                             style={inputStyle}
                                             onFocus={e => { e.target.style.borderColor = 'var(--primary)'; e.target.style.boxShadow = '0 0 0 3px rgba(221,67,95,0.12)'; }}
                                             onBlur={e => { e.target.style.borderColor = 'rgba(249,186,194,0.6)'; e.target.style.boxShadow = 'none'; }}
@@ -220,7 +233,8 @@ export default function PedidoCTA() {
                                     }}>
                                         ¿Qué deseas pedir?
                                     </label>
-                                    <select required style={{ ...inputStyle, appearance: 'none', cursor: 'pointer' }}
+                                    <select name="producto" required style={{ ...inputStyle, appearance: 'none', cursor: 'pointer' }}
+                                        value={form.producto} onChange={handleChange}
                                         onFocus={e => { e.target.style.borderColor = 'var(--primary)'; e.target.style.boxShadow = '0 0 0 3px rgba(221,67,95,0.12)'; }}
                                         onBlur={e => { e.target.style.borderColor = 'rgba(249,186,194,0.6)'; e.target.style.boxShadow = 'none'; }}
                                     >
@@ -243,7 +257,8 @@ export default function PedidoCTA() {
                                     }}>
                                         Cuéntanos más
                                     </label>
-                                    <textarea required rows={4} placeholder="Describe tu pedido: fecha, cantidad, diseño o inspiración..."
+                                    <textarea name="detalle" required rows={4} placeholder="Describe tu pedido: fecha, cantidad, diseño o inspiración..."
+                                        value={form.detalle} onChange={handleChange}
                                         style={{ ...inputStyle, resize: 'vertical', minHeight: '100px' }}
                                         onFocus={e => { e.target.style.borderColor = 'var(--primary)'; e.target.style.boxShadow = '0 0 0 3px rgba(221,67,95,0.12)'; }}
                                         onBlur={e => { e.target.style.borderColor = 'rgba(249,186,194,0.6)'; e.target.style.boxShadow = 'none'; }}
