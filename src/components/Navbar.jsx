@@ -59,8 +59,8 @@ export default function Navbar() {
             {/* Logo */}
             <a href="#" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
                 <img
-                    src="/slb.png"
-                    alt="Sweet & Love Bakery"
+                    src="/nlogo.png"
+                    alt="Kari's Bakery"
                     style={{ height: '42px', width: 'auto', objectFit: 'contain', display: 'block' }}
                 />
             </a>

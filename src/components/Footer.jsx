@@ -4,7 +4,7 @@ export default function Footer() {
     const links = {
         Productos: ['Crumble Cookies', 'Cuchareables', 'Pyes & Tartas', 'Pasteles Personalizados'],
         Servicios: ['Pedidos al por mayor', 'Catering & Eventos', 'Corporativo', 'Consultas gratis'],
-        'Sweet & Love': ['Nuestra historia', 'Galería', 'Reseñas', 'Políticas de pedido'],
+        "Kari's Bakery": ['Nuestra historia', 'Galería', 'Reseñas', 'Políticas de pedido'],
     };
 
     return (
@@ -33,8 +33,8 @@ export default function Footer() {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             <img
-                                src="/slb.png"
-                                alt="Sweet & Love Bakery"
+                                src="/nlogo.png"
+                                alt="Kari's Bakery"
                                 style={{ height: '48px', width: 'auto', objectFit: 'contain' }}
                             />
                         </div>
@@ -108,7 +108,7 @@ export default function Footer() {
                         fontFamily: 'Open Sans', fontSize: '0.75rem',
                         color: 'rgba(255,231,234,0.4)'
                     }}>
-                        © 2025 Sweet & Love Bakery. Todos los derechos reservados.
+                        © 2025 Kari's Bakery. Todos los derechos reservados.
                     </p>
                     <p style={{
                         fontFamily: 'Open Sans', fontSize: '0.75rem',

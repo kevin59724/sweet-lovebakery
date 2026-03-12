@@ -236,7 +236,7 @@ export default function Hero() {
                     }}>
                         <img
                             src="https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?w=700&q=80&auto=format"
-                            alt="postres Sweet & Love Bakery"
+                            alt="postres Kari's Bakery"
                             style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                         />
                         {/* overlay shimmer */}
