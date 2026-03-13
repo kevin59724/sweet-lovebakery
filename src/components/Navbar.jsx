@@ -59,7 +59,7 @@ export default function Navbar() {
             {/* Logo */}
             <a href="#" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
                 <img
-                    src="/nlogo.png"
+                    src="/logok.png"
                     alt="Kari's Bakery"
                     style={{ height: '42px', width: 'auto', objectFit: 'contain', display: 'block' }}
                 />

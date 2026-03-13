@@ -33,7 +33,7 @@ export default function Footer() {
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             <img
-                                src="/nlogo.png"
+                                src="/logok.png"
                                 alt="Kari's Bakery"
                                 style={{ height: '48px', width: 'auto', objectFit: 'contain' }}
                             />
