@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Settings, ImageIcon, Type, Palette, Save,
   ChevronRight, Sparkles, Eye, LayoutGrid, ChevronDown, ChevronUp,
-  Phone, Instagram, Star, UserPlus
+  Phone, Instagram, Star, UserPlus, Menu, X as XIcon
 } from 'lucide-react';
 import { useContent, DEFAULTS } from '../context/ContentContext';
 import { signOut } from 'firebase/auth';
@@ -143,6 +143,64 @@ const CSS = `
   }
   .ap-swatch-btn:hover { transform: scale(1.15); }
   .ap-swatch-btn.selected { border-color: #776265; }
+
+  /* ── Hamburger (mobile only) ── */
+  .ap-menu-btn {
+    display: none; background: none; border: 1.5px solid #f9bac2;
+    border-radius: .7rem; cursor: pointer; padding: .42rem .55rem;
+    color: #dd435f; align-items: center; justify-content: center; transition: all .2s;
+  }
+  .ap-menu-btn:hover { background: #fff0f2; }
+
+  /* ── Overlay (mobile sidebar backdrop) ── */
+  .ap-overlay {
+    display: none; position: fixed; inset: 0; z-index: 40;
+    background: rgba(80,30,40,.35); backdrop-filter: blur(2px);
+    cursor: pointer;
+  }
+  .ap-overlay.open { display: block; }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    /* Hamburger visible */
+    .ap-menu-btn { display: flex !important; }
+
+    /* Layout: single column */
+    .ap-layout {
+      grid-template-columns: 1fr !important;
+      gap: 0 !important;
+      padding: 1.2rem 1rem 5rem !important;
+    }
+
+    /* Sidebar: fixed drawer */
+    .ap-sidebar {
+      position: fixed !important;
+      top: 66px; left: 0; bottom: 0; width: 270px; z-index: 45;
+      background: #ffe7ea; overflow-y: auto; padding: 1.2rem;
+      transform: translateX(-110%);
+      transition: transform .32s cubic-bezier(.4,0,.2,1);
+      border-right: 1.5px solid #f9bac2;
+      box-shadow: 4px 0 28px rgba(221,67,95,.12);
+    }
+    .ap-sidebar.open { transform: translateX(0); }
+
+    /* Main content: reduce padding + radius */
+    .ap-main {
+      padding: 1.4rem 1.1rem !important;
+      border-radius: 1.4rem !important;
+    }
+
+    /* Header: reduce padding */
+    .ap-header { padding: 0 1rem !important; }
+
+    /* Hide desktop-only items */
+    .ap-desk-only { display: none !important; }
+  }
+
+  @media (max-width: 480px) {
+    /* Save button: icon only */
+    .ap-save-label { display: none !important; }
+  }
 `;
 
 /* ════════════════════════════════════════════════════════════
@@ -212,6 +270,7 @@ export default function Admin() {
   const [saving,  setSaving]  = useState(false);
   const [saved,   setSaved]   = useState(false);
   const [userName, setUserName] = useState('');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Carga el nombre del usuario logueado desde Firestore
   useEffect(() => {
@@ -404,18 +463,24 @@ export default function Admin() {
       <style>{CSS}</style>
       <div className="ap">
 
+        {/* ── Overlay (mobile sidebar backdrop) ── */}
+        <div className={`ap-overlay${sidebarOpen ? ' open' : ''}`} onClick={() => setSidebarOpen(false)} />
+
         {/* ══ TOPBAR ══ */}
-        <header style={{
+        <header className="ap-header" style={{
           position: 'sticky', top: 0, zIndex: 50,
-          background: 'rgba(255,231,234,0.78)',
+          background: 'rgba(255,231,234,0.85)',
           backdropFilter: 'blur(18px)',
           borderBottom: '1.5px solid #f9bac2',
           padding: '0 2rem', height: 66,
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          position: 'sticky',
         }}>
-          {/* Logo */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '.9rem' }}>
+          {/* Logo + hamburger */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '.75rem' }}>
+            {/* Hamburger — mobile only */}
+            <button className="ap-menu-btn" onClick={() => setSidebarOpen(o => !o)} aria-label="Menú">
+              {sidebarOpen ? <XIcon size={18} /> : <Menu size={18} />}
+            </button>
             <img
               src="/logok.png"
               alt="Kari's Bakery"
@@ -437,11 +502,12 @@ export default function Admin() {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '.75rem' }}>
-            <a href="/" target="_blank" rel="noreferrer" className="ap-pill">
+            <a href="/" target="_blank" rel="noreferrer" className="ap-pill ap-desk-only">
               <Eye size={11} /> Ver sitio
             </a>
             <button
               onClick={() => signOut(auth)}
+              className="ap-desk-only"
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: '.35rem',
                 background: 'transparent', border: '1.5px solid #f9bac2',
@@ -457,19 +523,21 @@ export default function Admin() {
             </button>
             <button className={`ap-save${saved ? ' ok' : ''}`} onClick={handleSave} disabled={saving}>
               <Save size={14} />
-              {saving ? 'Guardando...' : saved ? '¡Guardado! ✓' : 'Guardar cambios'}
+              <span className="ap-save-label">
+                {saving ? 'Guardando...' : saved ? '¡Guardado! ✓' : 'Guardar cambios'}
+              </span>
             </button>
           </div>
         </header>
 
         {/* ══ LAYOUT ══ */}
-        <div style={{
+        <div className="ap-layout" style={{
           maxWidth: 1200, margin: '0 auto', padding: '2.4rem 2rem 5rem',
           display: 'grid', gridTemplateColumns: '210px 1fr', gap: '1.8rem', alignItems: 'start',
         }}>
 
           {/* ── Sidebar ── */}
-          <aside>
+          <aside className={`ap-sidebar${sidebarOpen ? ' open' : ''}`}>
             {/* Greeting */}
             <div style={{
               background: '#fff8f9', borderRadius: '1.4rem', padding: '1.3rem',
@@ -492,16 +560,33 @@ export default function Admin() {
                 Secciones del sitio
               </div>
               {TABS.map(t => (
-                <button key={t.id} className={`ap-tab${tab === t.id ? ' active' : ''}`} onClick={() => setTab(t.id)}>
+                <button key={t.id} className={`ap-tab${tab === t.id ? ' active' : ''}`}
+                  onClick={() => { setTab(t.id); setSidebarOpen(false); }}>
                   {t.icon} {t.label}
                   {tab === t.id && <ChevronRight size={13} style={{ marginLeft: 'auto', color: '#dd435f' }} />}
                 </button>
               ))}
+
+              {/* Salir (visible solo en mobile dentro del sidebar) */}
+              <button
+                onClick={() => signOut(auth)}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: '.6rem',
+                  marginTop: '1.2rem', padding: '.7rem 1rem',
+                  background: 'none', border: '1.5px solid #f9bac2', borderRadius: '1rem',
+                  fontFamily: 'Montserrat,sans-serif', fontWeight: 700, fontSize: '.8rem',
+                  color: '#aa8286', cursor: 'pointer', width: '100%', transition: 'all .2s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.color = '#dd435f'; e.currentTarget.style.borderColor = '#dd435f'; }}
+                onMouseLeave={e => { e.currentTarget.style.color = '#aa8286'; e.currentTarget.style.borderColor = '#f9bac2'; }}
+              >
+                ↩ Cerrar sesión
+              </button>
             </nav>
           </aside>
 
           {/* ── Panel principal ── */}
-          <main className="ap-scroll" style={{
+          <main className="ap-main ap-scroll" style={{
             background: '#fff8f9', borderRadius: '2rem', padding: '2rem 2.4rem',
             border: '1.5px solid #f9bac2', boxShadow: '0 12px 50px rgba(221,67,95,.08)',
             position: 'relative', overflow: 'hidden', minHeight: 500,
