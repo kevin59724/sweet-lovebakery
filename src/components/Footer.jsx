@@ -26,12 +26,24 @@ export default function Footer() {
                         </p>
                         <div style={{ display: 'flex', gap: '0.8rem', flexWrap: 'wrap' }}>
                             {[
-                                { icon: <Instagram size={18} />, label: content.footerInstagram },
-                                { icon: <Phone    size={18} />, label: 'WhatsApp' },
-                            ].map(({ icon, label }) => (
-                                <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(249,186,194,0.12)', borderRadius: '100px', padding: '0.4rem 0.9rem', color: 'var(--accent)', fontFamily: 'Open Sans', fontSize: '0.72rem', cursor: 'pointer', transition: 'background 0.2s' }}>
+                                {
+                                    icon: <Instagram size={18} />,
+                                    label: 'karis_bakery.pe',
+                                    href: 'https://www.instagram.com/karis_bakery.pe/?hl=es',
+                                },
+                                {
+                                    icon: <Phone size={18} />,
+                                    label: 'WhatsApp',
+                                    href: 'https://wa.me/51978919450',
+                                },
+                            ].map(({ icon, label, href }) => (
+                                <a key={label} href={href} target="_blank" rel="noreferrer"
+                                    style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(249,186,194,0.12)', borderRadius: '100px', padding: '0.4rem 0.9rem', color: 'var(--accent)', fontFamily: 'Open Sans', fontSize: '0.72rem', cursor: 'pointer', transition: 'background 0.2s', textDecoration: 'none' }}
+                                    onMouseEnter={e => e.currentTarget.style.background = 'rgba(249,186,194,0.22)'}
+                                    onMouseLeave={e => e.currentTarget.style.background = 'rgba(249,186,194,0.12)'}
+                                >
                                     {icon} {label}
-                                </div>
+                                </a>
                             ))}
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontFamily: 'Open Sans', fontSize: '0.75rem', color: 'rgba(255,231,234,0.5)' }}>
