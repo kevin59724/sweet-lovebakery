@@ -35,7 +35,7 @@ export default function ManifiestoParallax() {
     }, []);
 
     return (
-        <section ref={sectionRef} style={{ position: 'relative', overflow: 'hidden', background: 'var(--primary)', padding: '8rem 2rem' }}>
+        <section id="nosotras" ref={sectionRef} style={{ position: 'relative', overflow: 'hidden', background: 'var(--primary)', padding: '8rem 2rem' }}>
             <div ref={bgRef} style={{
                 position: 'absolute', inset: '-20%',
                 backgroundImage: `url(${content.manifiestoImgUrl})`,
