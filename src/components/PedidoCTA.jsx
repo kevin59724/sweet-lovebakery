@@ -49,6 +49,7 @@ export default function PedidoCTA() {
 
     return (
         <section ref={sectionRef} id="pedidos" style={{ padding: '8rem 2rem', position: 'relative', overflow: 'hidden', background: 'var(--bg)' }}>
+            <span id="contacto" style={{ position: 'absolute', top: 0 }} />
             <div style={{ position: 'absolute', top: '5%', right: '-10%', width: '500px', height: '500px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(249,186,194,0.35) 0%, transparent 70%)', filter: 'blur(70px)', pointerEvents: 'none' }} />
 
             <div className="section-container grid-cta">
